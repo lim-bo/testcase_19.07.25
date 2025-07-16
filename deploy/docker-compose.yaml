@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:17.5-alpine3.22
+    hostname: postgres
+    container_name: testcase_postgres_container
+    ports:
+      - 5435:5432
+    volumes:
+      - testcase_pgdata:/var/lib/postgresql/data/pgdata
+      - ../migrations:/docker-entrypoint-initdb.d
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS}
+      POSTGRES_DB: ${POSTGRES_DBNAME}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    restart: unless-stopped
+    networks:
+      - testcase_net
+
+
+volumes:
+  testcase_pgdata:
+
+networks:
+  testcase_net:
