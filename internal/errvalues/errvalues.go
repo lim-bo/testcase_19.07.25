@@ -3,5 +3,7 @@ package errvalues
 import "errors"
 
 var (
-	ErrNoSuchRow = errors.New("lack of row with such id")
+	ErrNoSuchRow      = errors.New("lack of row with such id")
+	ErrInvalidRequest = errors.New("request with invalid body or path/query params")
+	ErrInternal       = errors.New("internal error")
 )
