@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strconv"
 	"testcase/internal/errvalues"
-	subs "testcase/internal/sub_repository"
+	"testcase/internal/subs"
 	"testcase/models"
 	"testing"
 	"time"
@@ -258,7 +258,7 @@ func TestIntegrational(t *testing.T) {
 
 	t.Run("successfully listed", func(t *testing.T) {
 		t.Parallel()
-		result, err := cli.ListSubs(&subs.ListOpts{
+		result, err := cli.ListSubs(&models.ListOpts{
 			Limit:  10,
 			Offset: 0,
 			Filter: nil,
@@ -274,7 +274,7 @@ func TestIntegrational(t *testing.T) {
 		filter := make(map[string]interface{})
 		filter["id"] = 2
 
-		result, err := cli.ListSubs(&subs.ListOpts{
+		result, err := cli.ListSubs(&models.ListOpts{
 			Limit:  10,
 			Offset: 0,
 			Filter: filter,
@@ -287,7 +287,7 @@ func TestIntegrational(t *testing.T) {
 	})
 	t.Run("listed with limit and offset", func(t *testing.T) {
 		t.Parallel()
-		result, err := cli.ListSubs(&subs.ListOpts{
+		result, err := cli.ListSubs(&models.ListOpts{
 			Limit:  5,
 			Offset: 3,
 			Filter: nil,

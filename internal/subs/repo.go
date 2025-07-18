@@ -64,6 +64,7 @@ func NewWithConn(conn PgConnection) *Client {
 	}
 }
 
+// Creates a new subscription row in db
 func (cli *Client) AddSub(s *models.Subscription) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
@@ -75,6 +76,8 @@ func (cli *Client) AddSub(s *models.Subscription) error {
 	return nil
 }
 
+// Returns subscription by provided id, if there is no any
+// returns ErrNoSuchRow
 func (cli *Client) GetSub(id int) (*models.Subscription, error) {
 	result := models.Subscription{
 		ID: id,
@@ -91,6 +94,8 @@ func (cli *Client) GetSub(id int) (*models.Subscription, error) {
 	return &result, nil
 }
 
+// Takes new subscription info and updates row with provided id,
+// if there is no any returns ErrNoSuchRow
 func (cli *Client) UpdateSub(id int, s *models.Subscription) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
@@ -104,6 +109,7 @@ func (cli *Client) UpdateSub(id int, s *models.Subscription) error {
 	return nil
 }
 
+// Deletes row with provided id, if there is no any returns ErrNoSuchRow
 func (cli *Client) DeleteSub(id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
@@ -116,14 +122,10 @@ func (cli *Client) DeleteSub(id int) error {
 	return nil
 }
 
-type ListOpts struct {
-	Limit  int
-	Offset int
-	Filter map[string]interface{}
-	Order  string
-}
-
-func (cli *Client) ListSubs(opts *ListOpts) ([]*models.Subscription, error) {
+// Takes opts for filtering, limit, order and offset settings and returns
+// list of subscriptions. opts.Filter and opts.Order can be nil for unfiltered
+// and unordered result
+func (cli *Client) ListSubs(opts *models.ListOpts) ([]*models.Subscription, error) {
 	query := squirrel.Select("id, name, uid, cost, created_at, expires").
 		From("subscriptions").
 		Limit(uint64(opts.Limit)).
@@ -156,6 +158,8 @@ func (cli *Client) ListSubs(opts *ListOpts) ([]*models.Subscription, error) {
 	return result, nil
 }
 
+// Returns sum of found rows with provided filter.
+// If filter is nil, returns sum of all rows
 func (cli *Client) PriceSum(filter map[string]interface{}) (int, error) {
 	query := squirrel.Select("SUM(cost)").
 		From("subscriptions").
