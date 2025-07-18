@@ -128,8 +128,10 @@ func (cli *Client) DeleteSub(id int) error {
 func (cli *Client) ListSubs(opts *models.ListOpts) ([]*models.Subscription, error) {
 	query := squirrel.Select("id, name, uid, cost, created_at, expires").
 		From("subscriptions").
-		Limit(uint64(opts.Limit)).
 		Offset(uint64(opts.Offset))
+	if opts.Limit != 0 {
+		query = query.Limit(uint64(opts.Limit))
+	}
 	if opts.Order != "" {
 		query = query.OrderBy(opts.Order)
 	}

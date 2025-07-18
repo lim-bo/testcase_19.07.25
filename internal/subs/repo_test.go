@@ -39,7 +39,7 @@ func TestAddSub(t *testing.T) {
 		Price:   400,
 		UID:     uuid.New(),
 		Start:   start,
-		Expires: exp,
+		Expires: &exp,
 	}
 	query := regexp.QuoteMeta(`INSERT INTO subscriptions (uid, name, cost, created_at, expires) VALUES ($1, $2, $3, $4, $5);`)
 	t.Run("successful", func(t *testing.T) {
@@ -76,7 +76,7 @@ func TestGetSub(t *testing.T) {
 		Price:   400,
 		UID:     uuid.New(),
 		Start:   start,
-		Expires: exp,
+		Expires: &exp,
 	}
 	query := regexp.QuoteMeta(`SELECT uid, name, cost, created_at, expires FROM subscriptions WHERE id = $1;`)
 	t.Run("successful", func(t *testing.T) {
@@ -121,7 +121,7 @@ func TestUpdateSub(t *testing.T) {
 		Price:   400,
 		UID:     uuid.New(),
 		Start:   start,
-		Expires: exp,
+		Expires: &exp,
 	}
 	id := 1
 	query := regexp.QuoteMeta(`UPDATE subscriptions SET uid = $1, name = $2, cost = $3, created_at = $4, expires = $5 WHERE id = $6`)
@@ -248,7 +248,7 @@ func TestIntegrational(t *testing.T) {
 			Price:   i * 100,
 			UID:     uid,
 			Start:   start,
-			Expires: exp,
+			Expires: &exp,
 		}
 		err := cli.AddSub(sub)
 		if err != nil {
