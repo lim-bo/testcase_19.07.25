@@ -54,6 +54,17 @@ func (s *Server) subIDMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+// @Summary Registering subscription
+// @Description Recieves new subscription info and
+// @Description saves it in DB
+// @Tags subs
+// @Router /subs/add [post]
+// @Accept json
+// @Produce json
+// @Param request body models.Subscription true "New subscription data"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
 func (s *Server) addSubscription(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	reqID := r.Context().Value("Request-ID").(string)
@@ -82,6 +93,15 @@ func (s *Server) addSubscription(w http.ResponseWriter, r *http.Request) {
 	writeResponseMessage(w, http.StatusOK, "sub added")
 }
 
+// @Summary Getting subcription info
+// @Description Provides subscription data by ID in path
+// @Tags subs
+// @Router /subs/{id} [get]
+// @Param id path int true "Subscription ID"
+// @Produce json
+// @Success 200 {object} models.Subscription
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
 func (s *Server) getSubscription(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	reqID := r.Context().Value("Request-ID").(string)
@@ -116,6 +136,17 @@ func (s *Server) getSubscription(w http.ResponseWriter, r *http.Request) {
 		slog.String("from", r.RemoteAddr))
 }
 
+// @Summary Updating subscription
+// @Description Recieves new subscription info for update
+// @Description by provided id in path
+// @Tags subs
+// @Router /subs/{id} [put]
+// @Accept json
+// @Produce json
+// @Param request body models.Subscription true "New subscription data"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
 func (s *Server) updateSubscription(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	reqID := r.Context().Value("Request-ID").(string)
@@ -152,6 +183,15 @@ func (s *Server) updateSubscription(w http.ResponseWriter, r *http.Request) {
 	writeResponseMessage(w, http.StatusOK, "subscription updated")
 }
 
+// @Summary Deleting subcription
+// @Description Deletes subscription with given id
+// @Tags subs
+// @Router /subs/{id} [delete]
+// @Param id path int true "Subscription ID"
+// @Produce json
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
 func (s *Server) deleteSubscription(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	reqID := r.Context().Value("Request-ID").(string)
@@ -178,6 +218,20 @@ func (s *Server) deleteSubscription(w http.ResponseWriter, r *http.Request) {
 	writeResponseMessage(w, http.StatusOK, "subscription deleted")
 }
 
+// @Summary Listing subscriptions
+// @Description Returns list of subscriptions with given
+// @Description unnecessary filters
+// @Tags subs
+// @Router /subs/list [get]
+// @Param name query string false "Sub's service name" Example(Spotify)
+// @Param uid query string false "User ID" Example(60601fee-2bf1-4721-ae6f-7636e79a0cba)
+// @Param limit query int false "Returned rows limit"
+// @Param offset query int false "Offset for paginations"
+// @Param order query string false "Filed name for sorting by" Example(name, uid, id, created_at, expires, price)
+// @Produce json
+// @Success 200 {array} models.Subscription
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
 func (s *Server) listSubscriptions(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	reqID := r.Context().Value("Request-ID").(string)
@@ -233,9 +287,19 @@ func (s *Server) listSubscriptions(w http.ResponseWriter, r *http.Request) {
 }
 
 type sumResponse struct {
-	Sum int `json:"sum"`
+	Sum int `json:"sum" example:"1000"`
 }
 
+// @Summary Getting price sum
+// @Description Recieving summary subscriptions price with
+// @Description provided filters
+// @Tags subs
+// @Router /subs/sum [get]
+// @Param name query string false "Sub's service name" Example(Spotify)
+// @Param uid query string false "User ID" Example(60601fee-2bf1-4721-ae6f-7636e79a0cba)
+// @Produce json
+// @Success 200 {object} sumResponse
+// @Failure 500 {object} map[string]string
 func (s *Server) getPriceSum(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	reqID := r.Context().Value("Request-ID").(string)

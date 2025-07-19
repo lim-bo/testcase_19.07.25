@@ -1,0 +1,260 @@
+definitions:
+  api.sumResponse:
+    properties:
+      sum:
+        example: 1000
+        type: integer
+    type: object
+  models.Subscription:
+    properties:
+      expires:
+        example: 02-2026
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: yandex
+        type: string
+      price:
+        example: 400
+        type: integer
+      start_date:
+        example: 01-2025
+        type: string
+      uid:
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        type: string
+    type: object
+info:
+  contact: {}
+  description: API-service for managing users' subscriptions
+  title: Subs-API
+  version: "1.0"
+paths:
+  /subs/{id}:
+    delete:
+      description: Deletes subscription with given id
+      parameters:
+      - description: Subscription ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Deleting subcription
+      tags:
+      - subs
+    get:
+      description: Provides subscription data by ID in path
+      parameters:
+      - description: Subscription ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Subscription'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Getting subcription info
+      tags:
+      - subs
+    put:
+      consumes:
+      - application/json
+      description: |-
+        Recieves new subscription info for update
+        by provided id in path
+      parameters:
+      - description: New subscription data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.Subscription'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Updating subscription
+      tags:
+      - subs
+  /subs/add:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Recieves new subscription info and
+        saves it in DB
+      parameters:
+      - description: New subscription data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.Subscription'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Registering subscription
+      tags:
+      - subs
+  /subs/list:
+    get:
+      description: |-
+        Returns list of subscriptions with given
+        unnecessary filters
+      parameters:
+      - description: Sub's service name
+        example: Spotify
+        in: query
+        name: name
+        type: string
+      - description: User ID
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        in: query
+        name: uid
+        type: string
+      - description: Returned rows limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset for paginations
+        in: query
+        name: offset
+        type: integer
+      - description: Filed name for sorting by
+        example: name, uid, id, created_at, expires, price
+        in: query
+        name: order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Subscription'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Listing subscriptions
+      tags:
+      - subs
+  /subs/sum:
+    get:
+      description: |-
+        Recieving summary subscriptions price with
+        provided filters
+      parameters:
+      - description: Sub's service name
+        example: Spotify
+        in: query
+        name: name
+        type: string
+      - description: User ID
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        in: query
+        name: uid
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.sumResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Getting price sum
+      tags:
+      - subs
+schemes:
+- http
+swagger: "2.0"

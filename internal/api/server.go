@@ -5,7 +5,10 @@ import (
 	"net/http"
 	"testcase/models"
 
+	_ "testcase/docs"
+
 	"github.com/go-chi/chi/v5"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 type SubsRepository interface {
@@ -42,6 +45,9 @@ func (s *Server) mountEndpoints() {
 		r.Get("/list", s.listSubscriptions)
 		r.Get("/sum", s.getPriceSum)
 	})
+	s.mx.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("/swagger/doc.json"),
+	))
 }
 
 func (s *Server) Run(address string) error {

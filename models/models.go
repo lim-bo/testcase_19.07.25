@@ -9,12 +9,12 @@ import (
 )
 
 type Subscription struct {
-	ID      int        `json:"id,omitempty"`
-	Name    string     `json:"name"`
-	Price   int        `json:"price"`
-	UID     uuid.UUID  `json:"uid"`
-	Start   time.Time  `json:"start_date"`
-	Expires *time.Time `json:"expires,omitempty"`
+	ID      int        `json:"id,omitempty" example:"1"`
+	Name    string     `json:"name" example:"yandex"`
+	Price   int        `json:"price" example:"400"`
+	UID     uuid.UUID  `json:"uid" example:"60601fee-2bf1-4721-ae6f-7636e79a0cba"`
+	Start   time.Time  `json:"start_date" example:"01-2025"`
+	Expires *time.Time `json:"expires,omitempty" example:"02-2026"`
 }
 
 const layout = "01-2006"

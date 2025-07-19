@@ -1,3 +1,7 @@
+// @title Subs-API
+// @version 1.0
+// @description API-service for managing users' subscriptions
+// @schemes http
 package main
 
 import (
