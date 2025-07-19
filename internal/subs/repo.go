@@ -160,14 +160,21 @@ func (cli *Client) ListSubs(opts *models.ListOpts) ([]*models.Subscription, erro
 	return result, nil
 }
 
-// Returns sum of found rows with provided filter.
-// If filter is nil, returns sum of all rows
-func (cli *Client) PriceSum(filter map[string]interface{}) (int, error) {
+// Returns sum of found rows with provided filter and range.
+// If filter is nil, returns sum of all rows.
+// If period is nil, returns sum for all time.
+func (cli *Client) PriceSum(filter map[string]interface{}, period *models.RangeOpts) (int, error) {
 	query := squirrel.Select("SUM(cost)").
 		From("subscriptions").
 		Where(squirrel.Eq(filter))
 	if filter != nil {
 		query = query.Where(squirrel.Eq(filter))
+	}
+	if period != nil {
+		query = query.Where(squirrel.Or{
+			squirrel.LtOrEq{"created_at": period.End},
+			squirrel.GtOrEq{"expires": period.Start},
+		})
 	}
 	sql, args, err := query.PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {

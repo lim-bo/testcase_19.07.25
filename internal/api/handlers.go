@@ -292,10 +292,13 @@ type sumResponse struct {
 
 // @Summary Getting price sum
 // @Description Recieving summary subscriptions price with
-// @Description provided filters
+// @Description provided filters and period values (start, end),
+// @Description if start or end undefined, returns sum for all the time.
 // @Tags subs
 // @Router /subs/sum [get]
 // @Param name query string false "Sub's service name" Example(Spotify)
+// @Param start query string false "Start period" Example(01-2015)
+// @Param end query string false "End period" Example(03-2016)
 // @Param uid query string false "User ID" Example(60601fee-2bf1-4721-ae6f-7636e79a0cba)
 // @Produce json
 // @Success 200 {object} sumResponse
@@ -304,7 +307,15 @@ func (s *Server) getPriceSum(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	reqID := r.Context().Value("Request-ID").(string)
 	filter := getFilterFromQuery(r)
-	sum, err := s.subsRepo.PriceSum(filter)
+	period, err := getPeriodFromQuery(r)
+	if err != nil {
+		slog.Error("sum request with invalid period dates",
+			slog.String("req_id", reqID),
+			slog.String("from", r.RemoteAddr))
+		writeErrorMessage(w, http.StatusBadRequest, errvalues.ErrInvalidRequest)
+		return
+	}
+	sum, err := s.subsRepo.PriceSum(filter, period)
 	if err != nil {
 		slog.Error("getting subs sum error",
 			slog.String("error", err.Error()),

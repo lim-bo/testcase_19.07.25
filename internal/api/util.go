@@ -2,6 +2,8 @@ package api
 
 import (
 	"net/http"
+	"testcase/models"
+	"time"
 
 	"github.com/bytedance/sonic"
 )
@@ -35,4 +37,27 @@ func getFilterFromQuery(r *http.Request) map[string]interface{} {
 		return nil
 	}
 	return filter
+}
+
+func getPeriodFromQuery(r *http.Request) (*models.RangeOpts, error) {
+	var period models.RangeOpts
+	var start, end string
+	if start = r.URL.Query().Get("start"); start != "" {
+		parsed, err := time.Parse("01-2006", start)
+		if err != nil {
+			return nil, err
+		}
+		period.Start = parsed
+	}
+	if end = r.URL.Query().Get("end"); end != "" {
+		parsed, err := time.Parse("01-2006", end)
+		if err != nil {
+			return nil, err
+		}
+		period.End = parsed
+	}
+	if start == "" || end == "" {
+		return nil, nil
+	}
+	return &period, nil
 }

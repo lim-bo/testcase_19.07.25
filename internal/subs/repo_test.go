@@ -304,7 +304,7 @@ func TestIntegrational(t *testing.T) {
 	t.Run("got price sum", func(t *testing.T) {
 		t.Parallel()
 		expected := 4500
-		sum, err := cli.PriceSum(nil)
+		sum, err := cli.PriceSum(nil, nil)
 		assert.NoError(t, err)
 		assert.Equal(t, sum, expected)
 	})

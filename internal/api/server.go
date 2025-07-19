@@ -17,7 +17,7 @@ type SubsRepository interface {
 	UpdateSub(id int, s *models.Subscription) error
 	DeleteSub(id int) error
 	ListSubs(opts *models.ListOpts) ([]*models.Subscription, error)
-	PriceSum(filter map[string]interface{}) (int, error)
+	PriceSum(filter map[string]interface{}, period *models.RangeOpts) (int, error)
 }
 
 type Server struct {

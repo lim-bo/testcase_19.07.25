@@ -148,7 +148,7 @@ const docTemplate = `{
         },
         "/subs/sum": {
             "get": {
-                "description": "Recieving summary subscriptions price with\nprovided filters",
+                "description": "Recieving summary subscriptions price with\nprovided filters and period values (start, end),\nif start or end undefined, returns sum for all the time.",
                 "produces": [
                     "application/json"
                 ],
@@ -162,6 +162,20 @@ const docTemplate = `{
                         "example": "Spotify",
                         "description": "Sub's service name",
                         "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "01-2015",
+                        "description": "Start period",
+                        "name": "start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "03-2016",
+                        "description": "End period",
+                        "name": "end",
                         "in": "query"
                     },
                     {

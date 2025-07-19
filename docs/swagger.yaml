@@ -227,12 +227,23 @@ paths:
     get:
       description: |-
         Recieving summary subscriptions price with
-        provided filters
+        provided filters and period values (start, end),
+        if start or end undefined, returns sum for all the time.
       parameters:
       - description: Sub's service name
         example: Spotify
         in: query
         name: name
+        type: string
+      - description: Start period
+        example: 01-2015
+        in: query
+        name: start
+        type: string
+      - description: End period
+        example: 03-2016
+        in: query
+        name: end
         type: string
       - description: User ID
         example: 60601fee-2bf1-4721-ae6f-7636e79a0cba

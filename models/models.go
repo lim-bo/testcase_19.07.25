@@ -68,3 +68,8 @@ type ListOpts struct {
 	Filter map[string]interface{}
 	Order  string
 }
+
+type RangeOpts struct {
+	Start time.Time
+	End   time.Time
+}
