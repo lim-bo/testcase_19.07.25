@@ -1,0 +1,6 @@
+# EXAMPLE
+api_address: 0.0.0.0:8080
+db_addr: postgres:5432
+db_user: postgres
+db_pass: test
+db_name: test
