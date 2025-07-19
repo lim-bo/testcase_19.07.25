@@ -20,7 +20,21 @@ services:
     restart: unless-stopped
     networks:
       - testcase_net
-
+  api:
+    image: testcase/api
+    build:
+      context: ../
+      dockerfile: deploy/api/DockerFile
+    container_name: testcase_api_container
+    environment:
+      WAIT_HOSTS: postgres:5432
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    networks:
+      - testcase_net
 
 volumes:
   testcase_pgdata:
