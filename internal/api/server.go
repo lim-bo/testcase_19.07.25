@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"log/slog"
 	"net/http"
 	"testcase/models"
@@ -21,8 +22,9 @@ type SubsRepository interface {
 }
 
 type Server struct {
-	mx       *chi.Mux
-	subsRepo SubsRepository
+	mx        *chi.Mux
+	subsRepo  SubsRepository
+	servEntry *http.Server
 }
 
 func New(sr SubsRepository) *Server {
@@ -52,6 +54,14 @@ func (s *Server) mountEndpoints() {
 
 func (s *Server) Run(address string) error {
 	s.mountEndpoints()
+	s.servEntry = &http.Server{
+		Addr:    address,
+		Handler: s.mx,
+	}
 	slog.Info("server is running on " + address)
-	return http.ListenAndServe(address, s.mx)
+	return s.servEntry.ListenAndServe()
+}
+
+func (s *Server) Shutdown(ctx context.Context) error {
+	return s.servEntry.Shutdown(ctx)
 }
